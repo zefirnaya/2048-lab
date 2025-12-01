@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Игра 2048</title>
+    <title>2048 pink edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -41,7 +41,6 @@
                     <div id="grid" class="grid"></div>
                 </div>
                 
-                <!-- Мобильные элементы управления -->
                 <div id="mobile-controls" class="mobile-controls">
                     <button class="mobile-btn up" data-direction="up"><i class="fas fa-arrow-up"></i></button>
                     <div class="mobile-row">
@@ -52,7 +51,6 @@
                 </div>
             </div>
 
-            <!-- Модальное окно окончания игры -->
             <div id="game-over-modal" class="modal">
                 <div class="modal-content">
                     <h2>Игра окончена!</h2>
@@ -70,7 +68,6 @@
                 </div>
             </div>
 
-            <!-- Модальное окно таблицы лидеров -->
             <div id="leaders-modal" class="modal">
                 <div class="modal-content">
                     <h2>Таблица лидеров</h2>
@@ -85,7 +82,6 @@
                                 </tr>
                             </thead>
                             <tbody id="leaders-body">
-                                <!-- Данные будут заполняться через JS -->
                             </tbody>
                         </table>
                     </div>
@@ -98,10 +94,33 @@
         </main>
 
         <footer class="footer">
-            <p>Игра 2048 &copy; 2025</p>
+            <p>Игра 2048 (lab3) &copy; 2025</p>
         </footer>
     </div>
 
+    <div class="sound-controls">
+        <button id="music-toggle" class="sound-btn active" title="Фоновая музыка">
+            <i class="fas fa-music"></i>
+        </button>
+        <button id="sound-toggle" class="sound-btn active" title="Звуковые эффекты">
+            <i class="fas fa-volume-up"></i>
+        </button>
+    </div>
+    <div id="welcome-modal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-gamepad"></i> Добро пожаловать в 2048!</h2>
+            <p>Хотите включить звуковые эффекты для лучшего игрового опыта?</p>
+            <div class="welcome-options">
+                <button id="enable-sounds-btn" class="btn">
+                    <i class="fas fa-volume-up"></i> Включить звуки
+                </button>
+                <button id="skip-sounds-btn" class="btn btn-danger">
+                    Играть без звуков
+                </button>
+            </div>
+            <p class="small-text">Вы всегда можете изменить настройки звука в правом нижнем углу</p>
+        </div>
+    </div>
     <script src="game.js"></script>
 </body>
 </html>
