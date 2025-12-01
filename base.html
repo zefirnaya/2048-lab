@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра 2048</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">2048</h1>
+            <div class="score-container">
+                <div class="score-label">Счет</div>
+                <div id="score" class="score">0</div>
+            </div>
+            <div class="controls">
+                <button id="undo-btn" class="btn" title="Отменить ход">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button id="restart-btn" class="btn" title="Начать заново">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button id="leaders-btn" class="btn" title="Таблица лидеров">
+                    <i class="fas fa-trophy"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="game-info">
+            <p class="instructions">
+                Объединяйте плитки с одинаковыми числами, чтобы получить 2048!<br>
+                Используйте стрелки на клавиатуре или кнопки управления.
+            </p>
+        </div>
+
+        <main class="main-content">
+            <div class="game-container">
+                <div class="grid-container">
+                    <div id="grid" class="grid"></div>
+                </div>
+                
+                <!-- Мобильные элементы управления -->
+                <div id="mobile-controls" class="mobile-controls">
+                    <button class="mobile-btn up" data-direction="up"><i class="fas fa-arrow-up"></i></button>
+                    <div class="mobile-row">
+                        <button class="mobile-btn left" data-direction="left"><i class="fas fa-arrow-left"></i></button>
+                        <button class="mobile-btn down" data-direction="down"><i class="fas fa-arrow-down"></i></button>
+                        <button class="mobile-btn right" data-direction="right"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Модальное окно окончания игры -->
+            <div id="game-over-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Игра окончена!</h2>
+                    <p id="final-score-text">Ваш счет: <span id="final-score">0</span></p>
+                    <div id="save-score-form">
+                        <input type="text" id="player-name" placeholder="Введите ваше имя" maxlength="20">
+                        <button id="save-score-btn" class="btn">Сохранить результат</button>
+                    </div>
+                    <div id="score-saved-message" class="hidden">
+                        <p>Ваш рекорд сохранен!</p>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="restart-after-game-btn" class="btn">Начать заново</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Модальное окно таблицы лидеров -->
+            <div id="leaders-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Таблица лидеров</h2>
+                    <div class="table-container">
+                        <table id="leaders-table">
+                            <thead>
+                                <tr>
+                                    <th>Место</th>
+                                    <th>Имя</th>
+                                    <th>Счет</th>
+                                    <th>Дата</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaders-body">
+                                <!-- Данные будут заполняться через JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="close-leaders-btn" class="btn">Закрыть</button>
+                        <button id="clear-leaders-btn" class="btn btn-danger">Очистить таблицу</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Игра 2048 &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
