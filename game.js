@@ -219,6 +219,203 @@ function moveDown() {
     return { moved, score: moveScore, newTiles };
 }
 
+function addRandomTile() {
+    const emptyCells = [];
+    
+    for (let row = 0; row < GRID_SIZE; row++) {
+        for (let col = 0; col < GRID_SIZE; col++) {
+            if (grid[row][col] === 0) {
+                emptyCells.push({ row, col });
+            }
+        }
+    }
+    
+    if (emptyCells.length > 0) {
+        const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        
+        const value = Math.random() < 0.9 ? 2 : 4;
+        
+        grid[randomCell.row][randomCell.col] = value;
+        
+        return { row: randomCell.row, col: randomCell.col, value };
+    }
+    
+    return null;
+}
+
+function handleMove(direction) {
+    if (gameOver) return;
+    
+    const prevGrid = grid.map(row => [...row]);
+    const prevScore = score;
+    
+    let result;
+    
+    switch (direction) {
+        case 'left':
+            result = moveLeft();
+            break;
+        case 'right':
+            result = moveRight();
+            break;
+        case 'up':
+            result = moveUp();
+            break;
+        case 'down':
+            result = moveDown();
+            break;
+        default:
+            return;
+    }
+    
+    if (result.moved) {
+        score += result.score;
+        
+        const newTile = addRandomTile();
+        if (newTile) result.newTiles.push(newTile);
+
+        lastMove = {
+            prevGrid,
+            prevScore,
+            newTiles: result.newTiles
+        };
+        
+        updateGrid();
+        updateScore();
+    }
+}
+
+function handleKeyDown(e) {
+    if (gameOverModal.style.display === 'flex' || leadersModal.style.display === 'flex') {
+        return;
+    }
+    
+    switch (e.key) {
+        case 'ArrowLeft':
+            e.preventDefault();
+            handleMove('left');
+            break;
+        case 'ArrowRight':
+            e.preventDefault();
+            handleMove('right');
+            break;
+        case 'ArrowUp':
+            e.preventDefault();
+            handleMove('up');
+            break;
+        case 'ArrowDown':
+            e.preventDefault();
+            handleMove('down');
+            break;
+    }
+}
+
+function handleTouchStart(e) {
+    if (gameOverModal.style.display === 'flex' || leadersModal.style.display === 'flex') {
+        return;
+    }
+    
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}
+
+function handleTouchEnd(e) {
+    if (gameOverModal.style.display === 'flex' || leadersModal.style.display === 'flex') {
+        return;
+    }
+    
+    if (!touchStartX || !touchStartY) return;
+    
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+    
+    const minSwipeDistance = 30;
+    
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (Math.abs(dx) > minSwipeDistance) {
+            if (dx > 0) {
+                handleMove('right');
+            } else {
+                handleMove('left');
+            }
+        }
+    } else {
+        if (Math.abs(dy) > minSwipeDistance) {
+            if (dy > 0) {
+                handleMove('down');
+            } else {
+                handleMove('up');
+            }
+        }
+    }
+    
+    touchStartX = 0;
+    touchStartY = 0;
+}
+
+function setupEventListeners() {
+    document.addEventListener('keydown', handleKeyDown);
+    
+    gridElement.addEventListener('touchstart', handleTouchStart, { passive: true });
+    gridElement.addEventListener('touchend', handleTouchEnd, { passive: true });
+    
+    undoBtn.addEventListener('click', undoMove);
+    restartBtn.addEventListener('click', restartGame);
+    leadersBtn.addEventListener('click', showLeadersModal);
+    
+    document.querySelectorAll('.mobile-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const direction = btn.dataset.direction;
+            handleMove(direction);
+        });
+    });
+    
+    window.addEventListener('resize', updateMobileControlsVisibility);
+}
+
+function updateMobileControlsVisibility() {
+    if (gameOverModal.style.display === 'flex' || leadersModal.style.display === 'flex') {
+        mobileControls.style.display = 'none';
+    } else {
+        if (window.innerWidth <= 768) {
+            mobileControls.style.display = 'flex';
+        } else {
+            mobileControls.style.display = 'none';
+        }
+    }
+}
+
+function showGameOverModal() {
+    gameOver = true;
+    finalScoreElement.textContent = score;
+    gameOverModal.style.display = 'flex';
+    saveScoreForm.classList.remove('hidden');
+    scoreSavedMessage.classList.add('hidden');
+    playerNameInput.value = '';
+    
+    updateMobileControlsVisibility();
+}
+
+function hideGameOverModal() {
+    gameOverModal.style.display = 'none';
+}
+
+function showLeadersModal() {
+    leadersModal.style.display = 'flex';
+    updateLeadersTable();
+    
+    updateMobileControlsVisibility();
+}
+
+function hideLeadersModal() {
+    leadersModal.style.display = 'none';
+    
+    updateMobileControlsVisibility();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Игра 2048 загружена');
     // Инициализация
